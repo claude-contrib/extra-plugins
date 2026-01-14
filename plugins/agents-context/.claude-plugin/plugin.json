@@ -1,0 +1,15 @@
+{
+  "name": "agents-context",
+  "version": "1.0.0",
+  "description": "Bring Agents.md to Claude Code",
+  "author": {
+    "name": "claude-contrib"
+  },
+  "license": "MIT",
+  "keywords": [
+    "agents.md",
+    "context",
+    "rules",
+    "path-specific"
+  ]
+}

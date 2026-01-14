@@ -42,7 +42,7 @@ set -euo pipefail
 # Get the working directory (git repository root or current directory)
 GIT_REPOSITORY_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 # Get the Claude rules directory
-CLAUD_RULES_DIR="$GIT_REPOSITORY_DIR/.claude/rules/agents"
+CLAUDE_RULES_DIR="$GIT_REPOSITORY_DIR/.claude/rules/agents"
 
 # Calculate relative path from repository root
 #
@@ -95,12 +95,12 @@ _generate_rule_file_header() {
 	local relative_dir="$1"
 	local path_pattern
 
-	if [[ "${relative_dir}" == "." ]]; then
+	if [[ "$relative_dir" == "." ]]; then
 		# Root directory - match everything
 		path_pattern="**/*"
 	else
 		# Specific directory - match directory and all subdirectories
-		path_pattern="${relative_dir}/**/*"
+		path_pattern="$relative_dir/**/*"
 	fi
 
 	cat <<EOF
@@ -161,16 +161,16 @@ _create_rule_file() {
 
 	local target_dir
 	# Create target directory structure
-	if [[ "${relative_dir}" == "." ]]; then
-		target_dir="$CLAUD_RULES_DIR"
+	if [[ "$relative_dir" == "." ]]; then
+		target_dir="$CLAUDE_RULES_DIR"
 	else
-		target_dir="$CLAUD_RULES_DIR/$relative_dir"
+		target_dir="$CLAUDE_RULES_DIR/$relative_dir"
 	fi
 
-	mkdir -p "${target_dir}"
+	mkdir -p "$target_dir"
 
 	local target_file
-	target_file="${target_dir}/AGENTS.md"
+	target_file="$target_dir/AGENTS.md"
 
 	# Generate file header
 	local rule_header
@@ -252,7 +252,7 @@ _find_agents_files_find() {
 	local -n agents_file_list_result=$1
 	# Find all AGENTS.md files (excluding .claude directory)
 	while IFS= read -r -d '' file; do
-		agents_file_list_result+=("${file}")
+		agents_file_list_result+=("$file")
 	done < <(find "$GIT_REPOSITORY_DIR" -type f -name "AGENTS.md" -not -path "*/.claude/*" -print0)
 }
 
@@ -277,9 +277,9 @@ _find_agents_files_find() {
 #   Non-zero - Error (via set -e)
 main() {
 	# Remove the rules directory
-	rm -fr "$CLAUD_RULES_DIR"
+	rm -fr "$CLAUDE_RULES_DIR"
 	# Create the rules directory
-	mkdir -p "$CLAUD_RULES_DIR"
+	mkdir -p "$CLAUDE_RULES_DIR"
 
 	local agents_file_list=()
 	# Check if we're in a git repository
